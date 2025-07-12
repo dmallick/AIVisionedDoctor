@@ -4,6 +4,9 @@
 
 #VoiceBot UI with Gradio
 import os
+import base64
+
+from dotenv import load_dotenv
 import gradio as gr
 
 from doctor_core_func import encode_image, analyze_image_with_query
@@ -11,7 +14,7 @@ from patient_voice_recognition import record_audio, transcribe_with_groq
 from doctor_core_func import text_to_speech_with_gtts
 #from doctor_core_func import text_to_speech_with_gtts, text_to_speech_with_elevenlabs
 
-#load_dotenv()
+load_dotenv()
 
 system_prompt="""You have to act as a professional doctor, i know you are not but this is for learning purpose. 
             What's in this image?. Do you find anything wrong with it medically? 
@@ -24,8 +27,8 @@ system_prompt="""You have to act as a professional doctor, i know you are not bu
 
 def process_inputs(audio_filepath, image_filepath):
     speech_to_text_output = transcribe_with_groq(GROQ_API_KEY=os.environ.get("GROQ_API_KEY"), 
-                                                 audio_filepath=audio_filepath,
-                                                 stt_model="whisper-large-v3")
+                                                 audio_filepath=audio_filepath)
+                                                 
 
     # Handle the image input
     if image_filepath:

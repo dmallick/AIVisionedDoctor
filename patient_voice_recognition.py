@@ -97,7 +97,7 @@ audio_filepath="test_audio.mp3"
 
 
 #This function transcribes audio using the Groq API with a specified STT model.
-def transcribe_with_groq( audio_filepath):
+def transcribe_with_groq(audio_filepath, GROQ_API_KEY=None):
     stt_model="whisper-large-v3"
 
     GROQ_API_KEY=os.environ.get('GROQ_API_KEY')
@@ -114,6 +114,6 @@ def transcribe_with_groq( audio_filepath):
         )
     return transcription.text
 
-transcription = transcribe_with_groq(audio_filepath)
+transcription = transcribe_with_groq(audio_filepath, os.environ.get('GROQ_API_KEY'))
 logging.info("Transcription completed successfully.")
 print(transcription)
