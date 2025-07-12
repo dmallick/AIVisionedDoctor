@@ -12,13 +12,19 @@
 
 import speech_recognition as sr
 from pydub import AudioSegment
+from dotenv import load_dotenv
 from pydub.playback import play
 from io import BytesIO
+from groq import Groq
 import logging
+import os
 
+
+load_dotenv()
+#Recognizes speech from an audio file and returns the transcription.
 def recognize_speech_from_audio(audio_file_path):
     """
-    Recognizes speech from an audio file and returns the transcription.
+    
     
     :param audio_file_path: Path to the audio file.
     :return: Transcription of the audio.
@@ -51,9 +57,9 @@ def recognize_speech_from_audio(audio_file_path):
         return None
 
 
+#Simplified function to record audio from the microphone and save it as an MP3 file.
 def record_audio(file_path, timeout=20, phrase_time_limit=None):
     """
-    Simplified function to record audio from the microphone and save it as an MP3 file.
 
     Args:
     file_path (str): Path to save the recorded audio file.
@@ -89,28 +95,25 @@ audio_filepath="test_audio.mp3"
 #record_audio("test_audio.mp3")
 
 
-from groq import Groq
-import os
-from dotenv import load_dotenv
-load_dotenv()
-GROQ_API_KEY=os.environ.get('GROQ_API_KEY')
 
-groq_client = Groq(api_key=GROQ_API_KEY)
+#This function transcribes audio using the Groq API with a specified STT model.
+def transcribe_with_groq( audio_filepath):
+    stt_model="whisper-large-v3"
 
-stt_model="whisper-large-v3"
+    GROQ_API_KEY=os.environ.get('GROQ_API_KEY')
 
-def transcribe_with_groq(stt_model, audio_filepath, GROQ_API_KEY):
+    #groq_client = Groq(api_key=GROQ_API_KEY)
+
     client=Groq(api_key=GROQ_API_KEY)
-    
+        
     audio_file=open(audio_filepath, "rb")
     transcription=client.audio.transcriptions.create(
-        model=stt_model,
-        file=audio_file,
-        language="en"
-    )
-
+            model=stt_model,
+            file=audio_file,
+            language="en"
+        )
     return transcription.text
 
-transcription = transcribe_with_groq(stt_model, audio_filepath, GROQ_API_KEY)
+transcription = transcribe_with_groq(audio_filepath)
 logging.info("Transcription completed successfully.")
 print(transcription)

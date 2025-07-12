@@ -12,16 +12,62 @@
 # 
 # ###
 import os
+import base64
 from dotenv import load_dotenv
+from groq import Groq
+from gtts import gTTS
+
 load_dotenv()
+def analyze_image_with_query(query, encoded_image, model):
+    """
+    Analyzes an image with a query using a specified model.
+    
+    :param query: The query to analyze the image.
+    :param encoded_image: Base64 encoded string of the image.
+    :param model: The model to use for analysis.
+    :return: Analysis response from the model.
+    """
+    groq_client = Groq(api_key=os.environ.get('GROQ_API_KEY'))
+    
+    message = [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": query
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/png;base64,{encoded_image}"
+                    }
+                }
+            ]
+        }
+    ]
+    
+    chat = groq_client.chat.completions.create(model=model, messages=message)
+    return chat.choices[0].message.content
+def encode_image(image_path):
+    """
+    Encodes an image file to base64 format.
+    
+    :param image_path: Path to the image file.
+    :return: Base64 encoded string of the image.
+    """
+    with open(image_path, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+    return encoded_string
+
 GROQ_API_KEY=os.environ.get('GROQ_API_KEY')
 
-import base64
+
 image_path = '/Users/debasishmallick/workspace/AIVisionedDoctor/acne.png'
 with open(image_path, "rb") as image_file:
     encoded_base64_image = base64.b64encode(image_file.read()).decode('utf-8')
 
-from groq import Groq
+
 groq_client = Groq(api_key=GROQ_API_KEY)
 model = "meta-llama/llama-4-scout-17b-16e-instruct"
 message  = [
@@ -47,46 +93,16 @@ chat = groq_client.chat.completions.create(model=model, messages=message)
 #response = chat.get_response()
 print(chat.choices[0].message.content)
 
+def text_to_speech_with_gtts(input_text, output_filepath):
+    language="en"
+
+    audioobj= gTTS(
+        text=input_text,
+        lang=language,
+        slow=False
+    )
+    audioobj.save(output_filepath)
 
 
-# Below is the Output from the model. print(chat.choices[0].message.content) generates the following response:
-""" Based on the provided image, here is a detailed medical analysis:
-
-**Clinical Presentation:**
-The image depicts a young male with a significant acne vulgaris presentation on his face, particularly on the cheek area.
-
-**Key Features:**
-
-* **Multiple comedones:** The presence of numerous comedones (blackheads and whiteheads) on the face, particularly on the cheek, suggests a diagnosis of acne vulgaris.
-* **Inflammatory lesions:** The presence of multiple red, inflamed papules and pustules indicates an inflammatory component to the acne.
-* **Severity:** The acne appears to be of moderate to severe severity, with a significant number of lesions and some clustering.
-
-**Differential Diagnosis:**
-
-* **Acne vulgaris:** This is the most likely diagnosis, given the presence of comedones, inflammatory lesions, and the typical distribution on the face.
-* **Other conditions:** Other possible differential diagnoses could include:
-        + Rosacea: characterized by flushing, telangiectasias, and papules, but typically spares the comedones.
-        + Folliculitis: an inflammation of the hair follicles, which could present with similar lesions, but often with a more acute onset.
-
-**Pathophysiology:**
-Acne vulgaris is a multifactorial disorder involving:
-
-* **Sebum production:** Increased sebum production leads to clogged pores.
-* **Comedone formation:** Clogged pores lead to comedone formation.
-* **Inflammation:** Bacterial colonization (e.g., Propionibacterium acnes) and inflammation contribute to the development of inflammatory lesions.
-
-**Treatment Options:**
-Treatment for acne vulgaris typically involves a combination of:
-
-* **Topical retinoids:** To prevent comedone formation and promote skin turnover.
-* **Benzoyl peroxide:** To reduce bacterial colonization and inflammation.
-* **Antibiotics:** Oral or topical antibiotics to target inflammatory lesions.
-* **Hormonal therapies:** For females, hormonal treatments may be considered to regulate sebum production.
-
-**Recommendations:**
-
-* **Dermatological evaluation:** A thorough dermatological evaluation is recommended to confirm the diagnosis and assess the severity of the acne.
-* **Treatment plan:** A personalized treatment plan should be developed, taking into account the individual's skin type, medical history, and treatment goals.
-* **Follow-up:** Regular follow-up appointments are essential to monitor treatment efficacy and adjust the treatment plan as needed.
- """
-
+#input_text="Hi this is Ai with Hassan!"
+#text_to_speech_with_gtts_old(input_text=input_text, output_filepath="gtts_testing.mp3")
