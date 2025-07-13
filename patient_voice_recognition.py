@@ -101,7 +101,7 @@ def transcribe_with_groq(audio_filepath, GROQ_API_KEY=None):
     stt_model="whisper-large-v3"
 
     GROQ_API_KEY=os.environ.get('GROQ_API_KEY')
-
+    print("Step1: transcribe_with_groq")
     #groq_client = Groq(api_key=GROQ_API_KEY)
 
     client=Groq(api_key=GROQ_API_KEY)

@@ -90,8 +90,8 @@ message  = [
 ]
 
 chat = groq_client.chat.completions.create(model=model, messages=message)
-#response = chat.get_response()
-print(chat.choices[0].message.content)
+
+print("Step 2: " + chat.choices[0].message.content)
 
 def text_to_speech_with_gtts(input_text, output_filepath):
     language="en"

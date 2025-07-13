@@ -12,6 +12,7 @@ import gradio as gr
 from doctor_core_func import encode_image, analyze_image_with_query
 from patient_voice_recognition import record_audio, transcribe_with_groq
 from doctor_core_func import text_to_speech_with_gtts
+from voice_of_doctor import text_to_speech_with_elevenlabs
 #from doctor_core_func import text_to_speech_with_gtts, text_to_speech_with_elevenlabs
 
 load_dotenv()
@@ -36,7 +37,7 @@ def process_inputs(audio_filepath, image_filepath):
     else:
         doctor_response = "No image provided for me to analyze"
 
-    voice_of_doctor = text_to_speech_with_gtts(input_text=doctor_response, output_filepath="final.mp3") 
+    voice_of_doctor = text_to_speech_with_elevenlabs(input_text=doctor_response, output_filepath="final.mp3") 
 
     return speech_to_text_output, doctor_response, voice_of_doctor
 
