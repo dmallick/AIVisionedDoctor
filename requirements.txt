@@ -1,13 +1,7 @@
-gTTS
-elevenlabs
+groq
+speechrecognition
 pydub
-dotenv             0.9.9
-groq               0.29.0
-PyAudio            0.2.14
-pydantic           2.11.7
-pydub              0.25.1
-SpeechRecognition  3.14.3
-gradio
-#ffmpeg
-#portaudio
-#python-pyaudio
+pyaudio
+
+# brew install ffmpeg
+# brew install portaudio

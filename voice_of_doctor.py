@@ -70,9 +70,6 @@ from elevenlabs.client import ElevenLabs
 
 def text_to_speech_with_elevenlabs(input_text, output_filepath):
     client=ElevenLabs(api_key=ELEVENLABS_API_KEY)
-    response = client.voices.get_all()
-    """for voice in response.voices:
-        print(f"Voice Name: {voice.name}, Voice ID: {voice.voice_id}")"""
     
     audio=client.text_to_speech.convert(
         voice_id="EXAVITQu4vr4xnSDxMaL",
@@ -97,4 +94,4 @@ def text_to_speech_with_elevenlabs(input_text, output_filepath):
     except Exception as e:
         print(f"An error occurred while trying to play the audio: {e}")
 
-text_to_speech_with_elevenlabs(input_text, output_filepath="elevenlabs_testing_autoplay.mp3")
+#text_to_speech_with_elevenlabs(input_text, output_filepath="elevenlabs_testing_autoplay.mp3")
